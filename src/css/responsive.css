@@ -1,0 +1,108 @@
+/* ============================================================
+   RESPONSIVE — mobile-first refinements
+   The vertical hierarchy is identical across breakpoints;
+   only scale, density and touch sizing change.
+   ============================================================ */
+
+/* ============================================================
+   SMALL PHONES  (≤ 400px)
+   ============================================================ */
+@media (max-width: 400px) {
+  :root { --header-h: 52px; }
+
+  .game { padding-left: 12px; padding-right: 12px; }
+  .hud { padding: 12px 14px; }
+  .board-card { padding: 14px 12px; }
+  .board { --board-max: 340px; }
+
+  .controls { gap: 8px; }
+  .btn--tool { min-width: 0; flex: 1 1 0; padding: 12px 12px; }
+
+  .tip { font-size: .75rem; padding: 11px 13px; }
+  .level-grid { grid-template-columns: repeat(3, 1fr); }
+  .modal { padding: 22px 18px; }
+}
+
+/* ============================================================
+   PHONES  (≤ 600px)
+   ============================================================ */
+@media (max-width: 600px) {
+  .page__spacer { display: none; }
+  .page__head { justify-content: flex-start; }
+  .page__title { flex: 1; text-align: center; padding-right: 76px; }
+
+  /* the puzzle should own the fold on mobile */
+  .board { --board-max: 340px; }
+  .board-card { margin-top: 14px; }
+
+  .menu { padding-bottom: clamp(130px, 34vw, 190px); }
+  .menu__logo { width: min(300px, 84%); }
+  .menu__actions .btn { width: 100%; }
+
+  .controls .btn--tool { flex: 1 1 0; }
+
+  .modal__actions--row { flex-direction: column; }
+  .modal__actions--row .btn { width: 100%; }
+
+  .legend { gap: 8px 14px; font-size: .75rem; }
+}
+
+/* ============================================================
+   LANDSCAPE PHONE — keep the board reachable
+   ============================================================ */
+@media (max-height: 520px) and (orientation: landscape) {
+  .board { --board-max: 250px; }
+  .subhud, .tip { display: none; }
+  .words { margin-top: 14px; padding-top: 12px; }
+  .game { padding-top: 12px; padding-bottom: 28px; }
+}
+
+/* ============================================================
+   TABLET  (≥ 601px)
+   ============================================================ */
+@media (min-width: 601px) {
+  .board { --board-max: 380px; }
+  .menu__actions { flex-direction: row; justify-content: center; }
+  .menu__actions .btn { width: auto; min-width: 190px; }
+  .info-card__actions { flex-direction: row-reverse; }
+}
+
+/* ============================================================
+   DESKTOP  (≥ 900px)
+   ============================================================ */
+@media (min-width: 900px) {
+  :root { --header-h: 64px; }
+
+  .game { max-width: 680px; padding-top: 30px; }
+  .board { --board-max: 440px; }
+
+  .hud__value { font-size: 1.75rem; }
+  .board-card { padding: 32px; }
+
+  .brand__kompas { font-size: 1.1875rem; }
+  .level-grid { grid-template-columns: repeat(6, 1fr); }
+}
+
+/* ============================================================
+   LARGE DESKTOP  (≥ 1200px)
+   ============================================================ */
+@media (min-width: 1200px) {
+  .board { --board-max: 480px; }
+  .game { max-width: 720px; }
+}
+
+/* ============================================================
+   COARSE POINTERS — bigger targets, no hover artefacts
+   ============================================================ */
+@media (pointer: coarse) {
+  .btn { min-height: 46px; }
+  .icon-btn { width: 42px; height: 42px; }
+  .modal__menu-item { padding: 15px 18px; }
+}
+
+/* ============================================================
+   PRINT — not a print product, keep it graceful
+   ============================================================ */
+@media print {
+  .app-header, .controls, .modal-layer, .toast-layer, .cityscape { display: none !important; }
+}

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#FFFFFF" />
+<meta name="description" content="Word Connect — game teka-teki kata dari Kompas.com. Hubungkan huruf untuk membentuk kata sebanyak mungkin sebelum waktu habis." />
+<title>Word Connect — Kompas.com</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="src/css/base.css?v=1.5.0" />
+<link rel="stylesheet" href="src/css/layout.css?v=1.5.0" />
+<link rel="stylesheet" href="src/css/game.css?v=1.5.0" />
+<link rel="stylesheet" href="src/css/modal.css?v=1.5.0" />
+<link rel="stylesheet" href="src/css/responsive.css?v=1.5.0" />
+</head>
+<body>
+
+<a class="skip-link" href="#screen-root">Lompat ke konten utama</a>
+
+<!-- ══════════════ APP HEADER ══════════════ -->
+<header class="app-header" id="app-header">
+  <div class="app-header__inner">
+    <a class="brand" href="#" data-action="go-menu" aria-label="Kompas.com, kembali ke menu utama">
+      <img class="brand__logo" src="assets/kompas-logo.png?v=1.5.0"
+           width="7380" height="924" alt="Kompas.com" decoding="async" />
+    </a>
+    <div class="app-header__actions">
+      <button class="icon-btn" type="button" data-action="toggle-sound" aria-label="Matikan suara" aria-pressed="true" id="btn-sound"></button>
+      <button class="icon-btn" type="button" data-action="open-howto" aria-label="Cara bermain" id="btn-help"></button>
+      <button class="icon-btn is-hidden" type="button" data-action="pause" aria-label="Jeda permainan" id="btn-pause"></button>
+    </div>
+  </div>
+</header>
+
+<main id="screen-root" class="screen-root">
+
+  <!-- ══════════════ 1. MENU UTAMA ══════════════ -->
+  <section class="screen screen--menu is-active" id="screen-menu" aria-labelledby="menu-title">
+    <div class="menu">
+      <p class="menu__eyebrow">Game Teka-Teki Kata</p>
+      <h1 class="menu__title" id="menu-title">
+        <img class="menu__logo" src="assets/connectword-logo.png?v=1.5.0"
+             width="1791" height="791" alt="Word Connect" fetchpriority="high" />
+      </h1>
+      <p class="menu__desc">
+        Hubungkan huruf yang berdekatan untuk membentuk kata sebanyak mungkin
+        sebelum waktu habis.
+      </p>
+
+      <div class="menu__stats" id="menu-stats"></div>
+
+      <div class="menu__actions">
+        <button class="btn btn--primary btn--lg" type="button" data-action="play">Mulai</button>
+      </div>
+    </div>
+    <div class="cityscape" id="cityscape" aria-hidden="true"></div>
+  </section>
+
+  <!-- ══════════════ 2. PILIH LEVEL ══════════════ -->
+  <section class="screen screen--levels" id="screen-levels" aria-labelledby="levels-title" hidden>
+    <div class="page">
+      <div class="page__head">
+        <button class="btn btn--icon-text" type="button" data-action="go-menu">
+          <span class="btn__icon" data-icon="arrow-left"></span><span>Menu</span>
+        </button>
+        <h2 class="page__title" id="levels-title">Pilih Level</h2>
+        <span class="page__spacer"></span>
+      </div>
+
+      <div class="progress-bar" role="group" aria-label="Progres permainan">
+        <div class="progress-bar__track"><div class="progress-bar__fill" id="progress-fill"></div></div>
+        <p class="progress-bar__label" id="progress-label"></p>
+      </div>
+
+      <div class="level-grid" id="level-grid" role="list"></div>
+
+      <ul class="legend" aria-label="Keterangan status level">
+        <li class="legend__item"><span class="legend__dot legend__dot--new"></span>Belum dimainkan</li>
+        <li class="legend__item"><span class="legend__dot legend__dot--current"></span>Sedang dimainkan</li>
+        <li class="legend__item"><span class="legend__dot legend__dot--done"></span>Selesai</li>
+        <li class="legend__item"><span class="legend__dot legend__dot--locked"></span>Terkunci</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════════ 3. INFO LEVEL ══════════════ -->
+  <section class="screen screen--info" id="screen-info" aria-labelledby="info-title" hidden>
+    <div class="page page--narrow">
+      <div class="page__head">
+        <button class="btn btn--icon-text" type="button" data-action="go-levels">
+          <span class="btn__icon" data-icon="arrow-left"></span><span>Level</span>
+        </button>
+        <h2 class="page__title" id="info-title">Info Level</h2>
+        <span class="page__spacer"></span>
+      </div>
+
+      <div class="info-card">
+        <p class="info-card__eyebrow">Bersiaplah</p>
+        <p class="info-card__level" id="info-level">Level 1</p>
+        <p class="info-card__sub" id="info-sub">Semakin menantang!</p>
+
+        <dl class="info-list" id="info-list"></dl>
+
+        <div class="info-card__actions">
+          <button class="btn btn--primary btn--lg" type="button" data-action="start-level">Mulai</button>
+          <button class="btn btn--ghost" type="button" data-action="go-levels">Kembali</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 4. HALAMAN BERMAIN ══════════════ -->
+  <section class="screen screen--game" id="screen-game" aria-labelledby="game-title" hidden>
+    <div class="game">
+
+      <h2 class="visually-hidden" id="game-title">Halaman bermain</h2>
+
+      <!-- SCORE / LEVEL / TIMER -->
+      <div class="hud" role="group" aria-label="Status permainan">
+        <div class="hud__cell">
+          <span class="hud__label">Waktu</span>
+          <span class="hud__value hud__value--time" id="hud-time">02:00</span>
+        </div>
+        <div class="hud__cell hud__cell--center">
+          <span class="hud__label">Level</span>
+          <span class="hud__value" id="hud-level">1</span>
+        </div>
+        <div class="hud__cell hud__cell--right">
+          <span class="hud__label">Skor</span>
+          <span class="hud__value hud__value--score" id="hud-score">0</span>
+        </div>
+      </div>
+
+      <div class="subhud">
+        <span class="subhud__item">Terbaik <b id="hud-best">0</b></span>
+        <span class="subhud__sep" aria-hidden="true"></span>
+        <span class="subhud__item">Kata <b id="hud-words">0/8</b></span>
+      </div>
+
+      <div class="goal"><div class="goal__track"><div class="goal__fill" id="goal-fill"></div></div></div>
+
+      <!-- MAIN PUZZLE -->
+      <div class="board-card">
+        <div class="board-shell">
+          <div class="board" id="board" role="application"
+               aria-label="Papan huruf. Gunakan tombol panah untuk berpindah, spasi untuk memilih huruf, Enter untuk mengirim kata.">
+            <svg class="board__lines" id="board-lines" aria-hidden="true" focusable="false"></svg>
+            <div class="board__tiles" id="board-tiles"></div>
+          </div>
+          <div class="board__current" id="board-current" aria-live="polite" aria-atomic="true"></div>
+          <div class="fx-layer" id="fx-layer" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- CONTROLS -->
+      <div class="controls">
+        <button class="btn btn--tool" type="button" data-action="shuffle">
+          <span class="btn__icon" data-icon="shuffle"></span><span>Acak</span>
+        </button>
+        <button class="btn btn--tool btn--tool-accent" type="button" data-action="hint">
+          <span class="btn__icon" data-icon="bulb"></span><span>Hint</span>
+          <span class="badge" id="hint-count">3</span>
+        </button>
+      </div>
+
+      <!-- FOUND WORDS -->
+      <section class="words" aria-labelledby="words-title">
+        <div class="words__head">
+          <h3 class="words__title" id="words-title">Kata Ditemukan</h3>
+          <span class="words__meter" id="words-meter">0 / 8</span>
+        </div>
+        <ul class="words__list" id="words-list" aria-live="polite"></ul>
+      </section>
+
+      <p class="tip"><span class="tip__key">Tips</span> Hubungkan huruf yang berdekatan — mendatar, menurun, atau diagonal. Kata minimal 3 huruf.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════ TOAST ══════════════ -->
+<div class="toast-layer" id="toast-layer" aria-live="polite"></div>
+
+<!-- ══════════════ MODAL LAYER ══════════════ -->
+<div class="modal-layer" id="modal-layer" hidden>
+  <div class="modal-backdrop" data-action="modal-backdrop"></div>
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"></div>
+</div>
+
+<script type="module" src="src/js/main.js?v=1.5.0"></script>
+</body>
+</html>

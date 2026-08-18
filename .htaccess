@@ -1,0 +1,29 @@
+# Word Connect — Apache config (XAMPP / htdocs)
+
+# Correct MIME types for ES modules and SVG
+AddType application/javascript .js
+AddType image/svg+xml .svg
+
+# Development: never serve stale CSS/JS.
+# For production, replace this with a long max-age plus versioned filenames.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|css|js|json)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive Off
+</IfModule>
+
+FileETag None
+
+# Compress text assets when available
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+</IfModule>
+
+# Directory listing off
+Options -Indexes

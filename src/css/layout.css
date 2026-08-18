@@ -1,0 +1,356 @@
+/* ============================================================
+   LAYOUT — app shell, header, screens, menu, levels, level info
+   ============================================================ */
+
+/* ---------------- App header ---------------- */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding-top: env(safe-area-inset-top);
+}
+.app-header__inner {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  min-height: var(--header-h);
+  padding: 0 clamp(14px, 4vw, 28px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+
+/* Official Kompas.com wordmark. Height-driven with width:auto so the
+   intrinsic 7380×924 ratio is preserved at every breakpoint. */
+.brand__logo {
+  height: clamp(19px, 4.4vw, 26px);
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.app-header__actions { display: flex; align-items: center; gap: 6px; }
+
+/* ---------------- Screens ---------------- */
+.screen-root { min-height: calc(100dvh - var(--header-h)); }
+
+.screen { display: none; }
+.screen.is-active { display: block; animation: screen-in var(--t-slow) var(--e-out) both; }
+
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.page {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 36px) clamp(14px, 4vw, 28px) 64px;
+}
+.page--narrow { max-width: 560px; }
+
+.page__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.page__title {
+  font-size: clamp(1.125rem, 3.4vw, 1.375rem);
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+.page__spacer { width: 92px; }
+
+/* ============================================================
+   MAIN MENU
+   ============================================================ */
+.screen--menu {
+  position: relative;
+  min-height: calc(100dvh - var(--header-h));
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% -10%, #FFFFFF 0%, var(--gray-100) 60%);
+}
+/* display lives on the active state only, so it can never fight `hidden` */
+.screen--menu.is-active { display: flex; }
+
+.menu {
+  position: relative;
+  z-index: 2;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: clamp(32px, 7vw, 72px) clamp(20px, 5vw, 28px) clamp(150px, 26vw, 220px);
+  text-align: center;
+}
+
+.menu__eyebrow {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 6px 14px;
+  border-radius: var(--r-full);
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* Hero lockup — the game logo IS the title, so the <h1> just frames it.
+   Width-driven with height:auto keeps the intrinsic 1791×791 ratio. */
+.menu__title {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 2px;
+  line-height: 0;
+}
+.menu__logo {
+  width: min(360px, 82%);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 24px rgba(0, 54, 117, .18));
+  animation: hero-in 520ms var(--e-back) both;
+}
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(10px) scale(.94); }
+  to   { opacity: 1; transform: none; }
+}
+
+.menu__desc {
+  max-width: 30ch;
+  margin: 20px auto 0;
+  color: var(--text-muted);
+  font-size: clamp(.9375rem, 2.6vw, 1.0625rem);
+  line-height: 1.6;
+}
+
+.menu__stats {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 26px;
+  flex-wrap: wrap;
+}
+.menu__stat {
+  min-width: 96px;
+  padding: 12px 18px;
+  border-radius: var(--r-md);
+  background: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: var(--sh-xs);
+}
+.menu__stat b {
+  display: block;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
+}
+.menu__stat span {
+  display: block;
+  margin-top: 2px;
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.menu__stat--accent b { color: var(--navy); }
+
+.menu__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 34px;
+}
+.menu__actions .btn { width: min(300px, 100%); }
+
+/* ---- Cityscape ---- */
+.cityscape {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  line-height: 0;
+}
+.cityscape svg { width: 100%; height: auto; }
+
+/* ============================================================
+   LEVEL SELECTION
+   ============================================================ */
+.progress-bar { margin-bottom: 22px; }
+.progress-bar__track {
+  height: 6px;
+  border-radius: var(--r-full);
+  background: var(--gray-200);
+  overflow: hidden;
+}
+.progress-bar__fill {
+  height: 100%;
+  width: 0;
+  border-radius: var(--r-full);
+  background: var(--navy);
+  transition: width var(--t-slow) var(--e-out);
+}
+.progress-bar__label {
+  margin-top: 10px;
+  font-size: .8125rem;
+  color: var(--text-muted);
+}
+.progress-bar__label b { color: var(--navy); font-weight: 600; }
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: clamp(10px, 2.4vw, 16px);
+}
+
+.level-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  aspect-ratio: 1 / 1;
+  padding: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  box-shadow: var(--sh-xs);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform var(--t-base) var(--e-out),
+    box-shadow var(--t-base) var(--e-out),
+    border-color var(--t-fast) var(--e-out);
+}
+.level-card:hover:not(.is-locked) { transform: translateY(-3px); box-shadow: var(--sh-md); border-color: var(--gray-300); }
+.level-card:active:not(.is-locked) { transform: translateY(-1px) scale(.98); }
+
+.level-card__num {
+  font-size: clamp(1.5rem, 4.4vw, 1.875rem);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--navy);
+  line-height: 1;
+}
+.level-card__meta {
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.level-card__mark {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 20px; height: 20px;
+  display: grid; place-items: center;
+}
+.level-card__mark svg { width: 100%; height: 100%; }
+
+/* states */
+.level-card--current {
+  border-color: var(--navy);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(0, 54, 117, .09);
+}
+.level-card--current .level-card__num { color: var(--navy); }
+.level-card--current .level-card__meta { color: var(--navy-700); }
+.level-card--current .level-card__mark { color: var(--orange); }
+
+.level-card--done { border-color: #BFE3CC; background: var(--success-bg); }
+.level-card--done .level-card__num { color: var(--success); }
+.level-card--done .level-card__meta { color: var(--success); }
+.level-card--done .level-card__mark { color: var(--success); }
+
+.level-card.is-locked { background: var(--gray-100); border-color: var(--gray-200); cursor: not-allowed; }
+.level-card.is-locked .level-card__num { color: var(--gray-300); }
+.level-card.is-locked .level-card__mark { color: var(--gray-500); }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: .8125rem;
+  color: var(--text-muted);
+}
+.legend__item { display: flex; align-items: center; gap: 8px; }
+.legend__dot { width: 12px; height: 12px; border-radius: var(--r-full); border: 1.5px solid var(--gray-300); background: var(--white); }
+.legend__dot--current { background: var(--orange); border-color: var(--orange); }
+.legend__dot--done { background: var(--success); border-color: var(--success); }
+.legend__dot--locked { background: var(--gray-300); border-color: var(--gray-300); }
+
+/* ============================================================
+   LEVEL INFO
+   ============================================================ */
+.info-card {
+  padding: clamp(24px, 5vw, 36px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  background: var(--white);
+  box-shadow: var(--sh-md);
+  text-align: center;
+}
+.info-card__eyebrow {
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.info-card__level {
+  margin-top: 6px;
+  font-size: clamp(2rem, 7vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -.035em;
+  line-height: 1.1;
+}
+.info-card__sub { margin-top: 4px; color: var(--text-muted); font-size: .9375rem; }
+
+.info-list {
+  margin: 26px 0 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  text-align: left;
+}
+.info-list__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--gray-050);
+}
+.info-list__row + .info-list__row { border-top: 1px solid var(--border); }
+.info-list__row dt { color: var(--text-muted); font-size: .875rem; }
+.info-list__row dd {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.01em;
+}
+.info-list__row--bonus { background: var(--orange-050); }
+.info-list__row--bonus dd { color: var(--orange-600); }
+
+.info-card__actions { display: flex; flex-direction: column; gap: 10px; }
+.info-card__actions .btn { width: 100%; }

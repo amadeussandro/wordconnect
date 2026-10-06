@@ -1,0 +1,9 @@
+/* Minimal reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+button { font: inherit; color: inherit; cursor: pointer; border: none; background: none; }
+ol, ul { list-style: none; }
+img, svg { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; }
